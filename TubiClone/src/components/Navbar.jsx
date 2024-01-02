@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Navbar = ({ onSearch, onSelectCategory }) => {
+const Navbar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = () => {
@@ -10,9 +10,9 @@ const Navbar = ({ onSearch, onSelectCategory }) => {
   return (
     <div className="navbar">
       <div className="logo">tubi</div>
-      <button onClick={() => onSelectCategory('movies')}>Movies</button>
-      <button onClick={() => onSelectCategory('tvShows')}>TV Shows</button>
-      <button onClick={() => onSelectCategory('tubiKids')}>Tubi Kids</button>
+      <button>Movies</button>
+      <button>TV Shows</button>
+      <button>Tubi Kids</button>
       <div className="search-bar">
         <input
           type="text"

@@ -6,12 +6,11 @@ const Homepage = () => {
   const [loadingGenres, setLoadingGenres] = useState(true);
   const [searchResults, setSearchResults] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('movies');
 
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await fetch(`https://advanced-movie-search.p.rapidapi.com/genre/${selectedCategory}/list`, {
+        const response = await fetch('https://advanced-movie-search.p.rapidapi.com/genre/movie/list', {
           method: 'GET',
           headers: {
             'X-RapidAPI-Key': '393d3bf389msh22ad968edc3f86ep10bee4jsncc2d901b34cf',
@@ -20,26 +19,26 @@ const Homepage = () => {
         });
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch ${selectedCategory} genres`);
+          throw new Error('Failed to fetch genres');
         }
 
         const data = await response.json();
         setGenres(data.genres);
         setLoadingGenres(false);
       } catch (error) {
-        console.error(`Error fetching ${selectedCategory} genres:`, error);
+        console.error('Error fetching genres:', error);
         setLoadingGenres(false);
       }
     };
 
     fetchGenres();
-  }, [selectedCategory]);
+  }, []); // The empty dependency array ensures that useEffect runs only once (on component mount)
 
   const handleSearch = async (query) => {
     setLoadingSearch(true);
 
     try {
-      const response = await fetch(`https://advanced-movie-search.p.rapidapi.com/search/${selectedCategory}?query=${query}`, {
+      const response = await fetch(`https://advanced-movie-search.p.rapidapi.com/search/movie?query=${query}`, {
         method: 'GET',
         headers: {
           'X-RapidAPI-Key': '393d3bf389msh22ad968edc3f86ep10bee4jsncc2d901b34cf',
@@ -48,13 +47,13 @@ const Homepage = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch ${selectedCategory} search results`);
+        throw new Error('Failed to fetch search results');
       }
 
       const data = await response.json();
       setSearchResults(data.results);
     } catch (error) {
-      console.error(`Error fetching ${selectedCategory} search results:`, error);
+      console.error('Error fetching search results:', error);
     } finally {
       setLoadingSearch(false);
     }
@@ -62,12 +61,12 @@ const Homepage = () => {
 
   return (
     <div className='homepage'>
-      <Navbar onSearch={handleSearch} onSelectCategory={setSelectedCategory} />
+      <Navbar onSearch={handleSearch} />
       {loadingGenres ? (
         <p>Loading genres...</p>
       ) : (
         <div>
-          <h2>{selectedCategory === 'tubiKids' ? 'Family Genres' : 'Movie Genres'}:</h2>
+          <h2>Movie Genres:</h2>
           <ul>
             {genres.map((genre) => (
               <li key={genre.id}>{genre.name}</li>
@@ -79,10 +78,10 @@ const Homepage = () => {
         <p>Loading search results...</p>
       ) : (
         <div>
-          <h2>{selectedCategory === 'tubiKids' ? 'Family' : 'Search'} Results:</h2>
+          <h2>Search Results:</h2>
           <ul>
-            {searchResults.map((item) => (
-              <li key={item.id}>{item.title}</li>
+            {searchResults.map((movie) => (
+              <li key={movie.id}>{movie.title}</li>
             ))}
           </ul>
         </div>
